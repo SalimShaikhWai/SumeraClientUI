@@ -1,0 +1,107 @@
+.navbar{
+    margin-left:4px;
+}
+#navmenu{
+    margin-left:4px;
+}
+.btn-navbar{
+        margin-left: 3px;
+}
+#header ul{
+    list-style: none;
+}
+
+ul li a{
+    text-decoration: none;
+    color:rgb(59, 59, 59);
+    font-size: 15px;
+}
+
+/* #header ul {
+    width:50%;
+
+} */
+
+#header li{
+    height:40px;
+    width: 100%;
+    padding-left: 4%;
+    border-right: none;
+   
+} 
+
+
+#main-doc{
+    margin-left: 4px;
+    
+    
+}
+/* #main-section{
+    padding-top: 60px;
+} */
+#Headrtitle
+{
+    font-size: 25px;
+    
+    border-right: 1px;
+
+    
+}
+
+.modal-body{
+    
+        width: 90%;
+        margin: 3px;
+        
+}
+section{
+   
+    padding-top:6%;
+
+}
+#signup
+{
+    text-align: center;
+    width: 50%;
+}
+#loginId{
+    text-align: center;
+    width: 50%;
+}
+.close{
+    width: 50%;
+}
+
+#changeView{
+
+position:absolute;
+margin-left:16px;
+bottom: 0px;
+margin-right:12px;
+
+
+
+}
+
+
+#changeViewMenu{
+
+    position:absolute;
+    
+margin-right:12px;
+margin-left:16px;
+  
+
+
+}
+
+@media only  screen and (min-width:1000px) {
+
+
+    #header ul {
+        position:fixed;
+        width:25%;
+    }
+    
+}
+

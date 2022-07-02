@@ -3,14 +3,24 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CountryComponent } from './country/country.component';
+import { CityComponent } from './city/city.component';
+import { FlightComponent } from './flight/flight.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CountryComponent,
+    CityComponent,
+    FlightComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+   HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
