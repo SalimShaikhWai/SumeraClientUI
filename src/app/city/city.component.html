@@ -1,7 +1,7 @@
 
-<div class="container mt-4" *ngIf="id==null">
-  <a [routerLink]="['/city',AddId]">
-     <button class="btn btn-success  m-2"type="AddCity">ADD City</button></a>
+<div class="container mt-4" *ngIf="flag=='LIST'">
+ 
+     <button class="btn btn-success  m-2"type="AddCity" (click)="showAddForm()">ADD City</button>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -17,24 +17,48 @@
                 <td>{{city.name}}</td>
                 <td>{{city.countryRefId}}</td>
                 <td><a [routerLink]="['/city',city.id]">View</a></td>
-                <td><a href="">Delete</a></td>
+               
             </tr>
         </tbody>
     </table>
 </div>
-<div class="container" *ngIf="cityObject">
-    <form #editform="ngForm" (ngSubmit)="AddOrEditData(editform.form)">
+
+<div class="container"  *ngIf="flag!='LIST'">
+
+    <h3 *ngIf="flag=='ADD'">Add City</h3>
+    <h3 *ngIf="flag=='EDIT'">Update City</h3>
+
+    <form    #editform="ngForm" (ngSubmit)="addOrEditData(editform.form)">
         
         <input type="hidden" name="id" id="id" [(ngModel)]="cityObject.id">
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">City Name</label>
-          <input type="email" class="form-control" id="name" name="name"  [(ngModel)]="cityObject.name">      
+          <input type="text" class="form-control" id="name" name="name" #cityName="ngModel" required  [(ngModel)]="cityObject.name" >   
+          <div class="form-control-feedback"
+
+          *ngIf="cityName.errors && (cityName.dirty || cityName.touched)">
+
+          <span class="text-danger" *ngIf="cityName.errors['required']">Name field is Required</span>
+
+         </div>
         </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Country Id</label>
-          <input type="text" class="form-control" name="countryRefId" id="countryRefId" [(ngModel)]="cityObject.countryRefId">
+       
+        <select required name="countryRefId" id="countryRefId" class="form-control"  #countryRefId="ngModel"  [(ngModel)]="cityObject.countryRefId">  
+            <option value="">Please select Value</option>  
+            <option *ngFor="let country of dropdown" [ngValue]="country.id">  
+                {{country.text}}  
+            </option>  
+         </select>  
+         <div class="form-control-feedback" *ngIf="countryRefId.errors && (countryRefId.dirty || countryRefId.touched)">
+                    <span class="text-danger" *ngIf="countryRefId.errors['required']">Please Select Country</span>
         </div>
+
+
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="button" class="btn btn-primary" (click)="deleteData()">Delete</button>
-      </form>
+        <button *ngIf="flag=='EDIT'" type="button" class="btn btn-primary" (click)="deleteData(cityObject.id)">Delete</button>
+        <button *ngIf="flag=='ADD'" type="reset" class="btn btn-primary" >Reset</button>
+      
+    
+    </form>
 </div>
+    

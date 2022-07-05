@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { from } from 'rxjs';
-import { City } from 'src/interfaces/city';
+import { FormGroup,FormBuilder, Validators} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { from, Observable } from 'rxjs';
+import { DropDownData } from 'src/interfaces/dropdownData';
+import { ICity } from 'src/interfaces/Icity';
+
+
 import { CityService } from '../Services/city.service';
 
 @Component({
@@ -12,61 +15,115 @@ import { CityService } from '../Services/city.service';
 })
 export class CityComponent implements OnInit {
 
-  id!:number;
-  cities!:City[];
-  cityObject:any;
-  AddId=0;
-  constructor(private cityService:CityService,private route:ActivatedRoute) {
-   
+  cityForm!:FormGroup;
+  dropdown!:DropDownData[];
+  flag:any;
+  cities!:ICity[];
+  cityObject=new ICity();
+ // AddId=0;
+  constructor(private fb:FormBuilder,private cityService:CityService,private route:ActivatedRoute,private router:Router) {
+
    }
 
   ngOnInit(): void {
+    this.cityForm=this.fb.group({
+      id:0,
+      name:['',Validators.required],
+      countryRefId:[,Validators.required]
+    });
 
-    this.id= this.route.snapshot.params['id'] || null ;
-    console.log(this.id);
-    if(this.id==0)
-    {
-      this.cityObject=new City();
-      this.cityObject.id=0;
-        console.log("coming bro"+this.cityObject.id);
-    }
-    else if(this.id>0)
-    {
-        this.cityService.getCityById(this.id).subscribe((data)=>{
-          console.log(data);
-            this.cityObject=data;
-            console.log( this.cityObject);
-        })
+
+
+   var id= this.route.snapshot.params['id'] || null ;
+    console.log(id);
+    
+     if(id>0)
+    { this.flag="EDIT";
+        this.getCountriesForDropdown();
+      
+        this.cityService.getCityById(id).subscribe(
+          {
+            next:(res)=>{
+              this.cityObject=res;
+            }
+          }
+        );
     }
     else{
-      console.log("cityytt");
-    this.cityService.getCities().subscribe((data:any)=>
-    {
-      console.log(data);
-      this.cities=data;
-      console.log(this.cities);
-    })
+      this.listOfData();
   }
 
    }
 
-   AddOrEditData(fromGoup:FormGroup)
+   listOfData()
+   {
+    this.flag="LIST";
+          console.log("cityytt");
+        this.cityService.getCities().subscribe((data:any)=>
+        {
+          console.log(data);
+          this.cities=data;
+          console.log(this.cities);
+        });
+   }
+
+getCountriesForDropdown()
+{
+  console.log("Dropdown Called");
+  this.cityService.getCountries().subscribe({
+    next:(data)=>{     
+      this.dropdown=data;    
+    }
+  });
+  
+}
+
+   showAddForm(){
+    this.cityObject=new ICity();
+    this.flag="ADD";
+    this.getCountriesForDropdown();
+   }
+
+   addOrEditData(fromGoup:FormGroup)
    {
     console.log(fromGoup.value);
-    if(fromGoup.value.id!=0){
-    console.log("Edit service called");
-         this.cityService.putCity(fromGoup.value).subscribe();  
-    }
+    if(this.flag=="EDIT"){
+        console.log("Edit service called");
+            this.cityService.putCity(fromGoup.value).subscribe(
+            {
+              next:()=>{           
+                this.router.navigate(['city']);
+              }
+            }
+            );  
+         }
     else{
-      console.log("add service called");
-         this.cityService.postCity(fromGoup.value).subscribe();
-    }
+         console.log("add service called");
+         this.cityService.postCity(fromGoup.value).subscribe(
+          ()=>  this.router.navigate(['city']),                                     
+         );
+        
+         }   
    }
-   deleteData(){
+
+
+   AddOrEditData2(){
+
+   }
+
+
+
+
+
+
+   deleteData(id:number){
     console.log("Delete data"+this.cityObject.id);
-    this.cityService.deleteCity(this.cityObject.id).subscribe();
-   }
-   
+    this.cityService.deleteCity(this.cityObject.id).subscribe({
+      next:()=>{
+        this.router.navigate(['city']);
+      }
+    });   
+   }  
   }
 
 
